@@ -1,0 +1,463 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>remotion-markup · Remotion Agent Skills</title>
+<link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+<header class="topbar">
+  <a class="back" href="../index.html">← 返回技能目录</a>
+  <span class="crumb">Remotion Agent Skills</span>
+</header>
+<main class="detail">
+  <div class="detail-head">
+    <div class="chip mono">/remotion-markup</div>
+    <h1>remotion-markup</h1>
+    <p class="desc-cn">内容、动画与特效最佳实践</p>
+    <p class="desc-en">Content, animation and effects best practices</p>
+    <div class="meta-row">
+      <span class="badge">v4.0.536</span>
+      <span class="badge badge-src">来源：remotion-dev/skills</span>
+    </div>
+  </div>
+  <article class="md">
+<p>This is guidance for writing Remotion React Markup.
+If this is not relevant, load Remotion Best Practices instead.</p>
+<h2>Preserve user changes</h2>
+<p>Users may make edits in the code outside of the conversation.</p>
+<p>If you detect a surprising change made in the meanwhile, don't overwrite it, assume it was intentional or ask for confirmation.</p>
+<h2>General rules</h2>
+<p>Inside a composition or scene component, get <code>fps</code> from <code>useVideoConfig()</code> for
+all seconds-to-frames calculations, including timing props such as <code>from</code>,
+<code>trimBefore</code> and <code>durationInFrames</code>. Keeping the expression on
+the JSX node, such as <code>trimBefore={4 * fps}</code>, lets Studio edit the timing and
+keeps it correct if the composition frame rate changes.</p>
+<p>Drive animations using <code>useCurrentFrame()</code> and <code>interpolate()</code>.<br />
+CSS <code>transition</code> or <code>animation</code> will not render correctly, they need to refactored.<br />
+Tailwind animation class will not render correctly, they need to be refactored.</p>
+<p>Use <code>Easing.bezier()</code> and <code>Easing.spring()</code> to customize timing.</p>
+<p>Use <code>Track</code> for successive scenes. Make scenes and reusable elements with
+<code>Interactive.create()</code>, setting <code>layout</code> explicitly to <code>'absolute-fill'</code> or
+<code>'none'</code>, and register them as connected compositions. Put timing directly on
+each instance. Follow the complete
+Track + connected compositions example.
+See Remotion Interactivity for editable props
+and keyframes.</p>
+<p>The Studio edits the JSX source node that created an item. Author every composition registration, clip, scene, layer and sequence that should be editable independently as its own JSX node, with its editable props inline.
+Programmatic loops are suitable when the generated instances are intentionally controlled as one source template, not when users need to edit the instances
+separately.</p>
+<pre><code class="language-tsx">import { useCurrentFrame, useVideoConfig, Easing, interpolate, Interactive } from &quot;remotion&quot;;
+
+export const FadeIn = () =&gt; {
+  const frame = useCurrentFrame();
+  const {fps} = useVideoConfig();
+
+  return (
+    &lt;Interactive.Div
+      name=&quot;Title&quot;
+      style={{
+        opacity: interpolate(frame, [0, 2 * fps], [0, 1], {
+          extrapolateRight: &quot;clamp&quot;,
+          extrapolateLeft: &quot;clamp&quot;,
+          easing: Easing.bezier(0.16, 1, 0.3, 1),
+        }),
+      }}
+    &gt;
+      Hello World!
+    &lt;/Interactive.Div&gt;
+  );
+};
+</code></pre>
+<p>Keep the <code>interpolate()</code> call inline in the <code>style</code> prop.
+Use <code>scale</code>, <code>translate</code>, <code>rotate</code> CSS properties over <code>transform</code>.</p>
+<pre><code class="language-tsx">// 👍 Inline editable keyframes and transform shorthands
+style={{
+  scale: interpolate(frame, [0, 100], [0, 1], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+    easing: Easing.spring({damping: 200}),
+    output: 'perceptual-scale' // For `scale` animations, use &quot;output: 'perceptual-scale'&quot;
+  }),
+  translate: interpolate(frame, [0, 100], [&quot;0px 0px&quot;, &quot;100px 100px&quot;], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+    easing: Easing.spring({damping: 200}),
+  }),
+  rotate: interpolate(frame, [0, 100], [&quot;20deg&quot;, &quot;90deg&quot;], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+    easing: Easing.spring({damping: 200}),
+  }),
+}}
+
+// 👎 Non-inline values and transform strings become harder to edit in Studio
+const scale = interpolate(frame, [0, 100], [0, 1]);
+
+style={{
+  transform: `scale(${scale})`,
+}}
+</code></pre>
+<h2>Assets</h2>
+<p>Place assets in the <code>public/</code> folder at your project root.
+Use <code>staticFile()</code> to reference files from the <code>public/</code> folder.</p>
+<h2>Media components</h2>
+<p>Add video and audio using <code>&lt;Video&gt;</code> and <code>&lt;Audio&gt;</code> from <code>@remotion/media</code>.<br />
+Add images using the <code>&lt;CanvasImage&gt;</code> component.
+Add animated GIFs, APNG, WebP or AVIF images using <code>&lt;AnimatedImage&gt;</code>, use <code>@remotion/gif</code> if not using Chrome.
+Use <code>staticFile()</code> for files in <code>public/</code> or pass a remote URL directly:</p>
+<pre><code class="language-tsx">import { Audio, Video } from &quot;@remotion/media&quot;;
+import { staticFile, CanvasImage, AnimatedImage } from &quot;remotion&quot;;
+
+export const MyComposition = () =&gt; {
+  return (
+    &lt;&gt;
+      &lt;Video src={staticFile(&quot;video.mp4&quot;)} style={{ opacity: 0.5 }} /&gt;
+      &lt;Audio src={staticFile(&quot;audio.mp3&quot;)} /&gt;
+      &lt;CanvasImage
+        src={staticFile(&quot;logo.png&quot;)}
+        style={{ width: 100, height: 100 }}
+      /&gt;
+      &lt;Video src=&quot;https://remotion.media/video.mp4&quot; /&gt;
+      &lt;AnimatedImage src={staticFile('nyancat.gif')} /&gt;
+    &lt;/&gt;
+  );
+};
+</code></pre>
+<p>If the composition is primarily a timeline of video or audio clips, read
+<a href="video-editing.md">video-editing.md</a> before choosing its source structure.</p>
+<h2>Example scene</h2>
+<p>A background video with a lower third.
+The lower third is an interactive component with its own timeline, registered as a <a href="connected-compositions.md">connected composition</a>.
+Its text is passed as <code>children</code> and <code>accentColor</code> is an editable prop.
+The fade-in is keyframed inline at the call site.</p>
+<pre><code class="language-tsx">// MyScene.tsx
+import { Video } from &quot;@remotion/media&quot;;
+import { Easing, Interactive, interpolate, useCurrentFrame, useVideoConfig } from &quot;remotion&quot;;
+import { LowerThird } from &quot;./LowerThird&quot;;
+
+const MySceneInner = () =&gt; {
+  const { fps } = useVideoConfig();
+  const frame = useCurrentFrame();
+
+  return (
+    &lt;&gt;
+      &lt;Video
+        name=&quot;Background&quot;
+        src=&quot;https://remotion.media/video.mp4&quot;
+        objectFit=&quot;cover&quot;
+        style={{
+          position: &quot;absolute&quot;,
+          width: &quot;100%&quot;,
+          height: &quot;100%&quot;,
+        }}
+      /&gt;
+      &lt;LowerThird
+        name=&quot;Lower third&quot;
+        from={1 * fps}
+        accentColor=&quot;#0b84f3&quot;
+        style={{
+          opacity: interpolate(frame, [1 * fps, 2 * fps], [0, 1], {
+            extrapolateRight: &quot;clamp&quot;,
+            extrapolateLeft: &quot;clamp&quot;,
+            easing: Easing.bezier(0.16, 1, 0.3, 1),
+          }),
+        }}
+      &gt;
+        Jane Doe, Product Designer
+      &lt;/LowerThird&gt;
+    &lt;/&gt;
+  );
+};
+
+export const MyScene = Interactive.create({
+  Component: MySceneInner,
+  layout: &quot;absolute-fill&quot;,
+});
+</code></pre>
+<pre><code class="language-tsx">// LowerThird.tsx
+import type React from &quot;react&quot;;
+import { Interactive, type InteractivitySchema } from &quot;remotion&quot;;
+
+type LowerThirdProps = {
+  readonly children: React.ReactNode;
+  readonly accentColor: string;
+  readonly style?: React.CSSProperties;
+};
+
+const LowerThirdInner: React.FC&lt;LowerThirdProps&gt; = ({
+  children,
+  accentColor,
+  style,
+}) =&gt; {
+  return (
+    &lt;div
+      style={{
+        position: &quot;absolute&quot;,
+        left: 80,
+        bottom: 80,
+        display: &quot;flex&quot;,
+        alignItems: &quot;center&quot;,
+        gap: 20,
+        backgroundColor: &quot;white&quot;,
+        borderRadius: 16,
+        padding: &quot;20px 32px&quot;,
+        color: &quot;black&quot;,
+        fontFamily: &quot;Helvetica, Arial, sans-serif&quot;,
+        fontSize: 48,
+        fontWeight: 600,
+        ...style,
+      }}
+    &gt;
+      &lt;div
+        style={{
+          width: 8,
+          alignSelf: &quot;stretch&quot;,
+          borderRadius: 4,
+          backgroundColor: accentColor,
+        }}
+      /&gt;
+      {children}
+    &lt;/div&gt;
+  );
+};
+
+const lowerThirdSchema = {
+  ...Interactive.childrenSchema,
+  ...Interactive.textSchema,
+  accentColor: {
+    type: &quot;color&quot;,
+    default: &quot;#0b84f3&quot;,
+    description: &quot;Accent color&quot;,
+  },
+} as const satisfies InteractivitySchema;
+
+export const LowerThird = Interactive.create({
+  Component: LowerThirdInner,
+  layout: &quot;none&quot;,
+  schema: lowerThirdSchema,
+});
+</code></pre>
+<p>```tsx title="src/Root.tsx"
+import { Composition } from "remotion";
+import { LowerThird } from "./LowerThird";
+import { MyScene } from "./MyScene";</p>
+<p>export const RemotionRoot: React.FC = () =&gt; {
+  return (
+    &lt;&gt;
+      <Composition
+        id="MyScene"
+        component={MyScene}
+        durationInFrames={60}
+        fps={30}
+        width={1280}
+        height={720}
+      />
+      <Composition
+        id="LowerThird"
+        component={LowerThird}
+        durationInFrames={30}
+        fps={30}
+        width={1280}
+        height={720}
+        defaultProps={{
+          children: "Jane Doe, Product Designer",
+          accentColor: "#0b84f3",
+        }}
+      />
+    &lt;/&gt;
+  );
+};</p>
+<pre><code>
+## Delaying, trimming
+
+Put timing directly on components that support it. See [Timing props](./timing-props.md) for the supported props, examples, and order of operations.
+
+## Maps
+
+See [Remotion Maps](./remotion-maps/REFERENCE.md) if wanting to include maps in the video.
+
+## Text highlights and annotations
+
+See [text-highlights.md](text-highlights.md) for text highlights (highlight markers), circles, underlines, strike-throughs, crossed-off text, boxes.
+
+## Multi-scene videos
+
+See [multi-scene-video.md](multi-scene-video.md) if planning to make a video with multiple subsequent scenes.
+
+## Connected compositions
+
+When a scene or group of layers deserves its own editable timeline, follow [connected-compositions.md](connected-compositions.md). Prefer this structure for substantial scenes in a multi-scene video.
+
+### Pre-compose action
+
+For a Studio request such as `Pre-compose Ambient glow (src/BarChart.tsx:134)`, find the selected sequence markup at the given location. Make a connected composition, following [connected-compositions.md](connected-compositions.md): extract the markup into a named component, preferably make it interactive with `Interactive.create()`, and register the same exported component reference with a unique `&lt;Composition&gt;` in the root. Render the interactive component directly with its timing props, or as the only child of a sequence when that wrapper has a purpose. If the selected node is already a sequence, keep its props and extract its children. The registration needs dimensions, fps, duration, and `defaultProps` equivalent to its parent use. A component extraction without a registered composition does not complete a pre-compose request.
+
+Carry inherited styles such as `fontFamily` and font loading into the extracted
+component; see [parent independence](connected-compositions.md#make-the-component-independent-of-its-parent).
+
+## Voiceover
+
+See [voiceover.md](voiceover.md) for adding an AI-generated voiceover to Remotion compositions using ElevenLabs TTS.
+
+## Embedding Videos
+
+See [embedding-videos.md](embedding-videos.md) for advanced knowledge about embedding videos - trimming, volume, speed, looping, pitch.
+
+## Embedding Audio
+
+See [audio.md](audio.md) for advanced audio features like trimming, volume, speed, pitch.
+
+## Cropping
+
+See [cropping.md](cropping.md) if needing to crop the visible rectangle of a component.
+
+## Transitions
+
+See [transitions.md](transitions.md) for scene transition patterns.
+
+## Motion blur
+
+When adding motion blur or a movement trail, read [motion-blur.md](motion-blur.md) for the preferred HTML-in-canvas approach, preview requirements, and alternatives.
+
+## Visual and pixel effects
+
+When adding a visual effect, first identify the element or group it should affect.
+If the target component supports `effects` and a built-in effect below matches the
+request, prefer that effect over a CSS approximation. For example, apply
+`vignette()` directly to a `&lt;Video&gt;`'s `effects` prop when the vignette should
+affect that video.
+
+These components accept `effects` directly:
+
+| Import from        | Components                                                                                                                    |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------------- |
+| `remotion`         | `&lt;Img&gt;`, `&lt;CanvasImage&gt;`, `&lt;AnimatedImage&gt;`, `&lt;Solid&gt;`, `&lt;HtmlInCanvas&gt;`                                                      |
+| `@remotion/media`  | `&lt;Video&gt;`                                                                                                                     |
+| `@remotion/gif`    | `&lt;Gif&gt;`                                                                                                                       |
+| `@remotion/rive`   | `&lt;RemotionRiveCanvas&gt;`                                                                                                        |
+| `@remotion/shapes` | `&lt;Arrow&gt;`, `&lt;Callout&gt;`, `&lt;Circle&gt;`, `&lt;Ellipse&gt;`, `&lt;Heart&gt;`, `&lt;Pie&gt;`, `&lt;Polygon&gt;`, `&lt;Rect&gt;`, `&lt;Spark&gt;`, `&lt;Star&gt;`, `&lt;Triangle&gt;` |
+
+Ordinary HTML elements, `&lt;Interactive.*&gt;` DOM wrappers, `&lt;AbsoluteFill&gt;`, and
+`&lt;Sequence&gt;` do not accept `effects` directly. To apply effects to their content,
+wrap them in `&lt;HtmlInCanvas&gt;` and put the `effects` prop on the wrapper.
+
+For other elements, prefer regular HTML and CSS where suitable. Consider wrapping
+a group in [`&lt;HtmlInCanvas&gt;`](html-in-canvas.md) when post-processing the whole
+group is appropriate and the environment supports it.
+
+Read [effects.md](effects.md) before applying an effect for imports, parameters,
+and setup. It also covers reusable custom effects with `createEffect()` when no
+built-in effect matches.
+
+### Available effects
+
+Built-in effects from `@remotion/effects`:
+
+- Color and tone: `brightness()`, `colorCorrection()`, `colorKey()`, `contrast()`, `duotone()`, `exposure()`, `grayscale()`, `hue()`, `invert()`, `levels()`, `linearGradient()`, `linearGradientTint()`, `lut()`, `saturation()`, `shadowsHighlights()`, `thermalVision()`, `tint()`, `vibrance()`, `whiteBalance()`.
+- Blur and trails: `blur()`, `lightTrail()`, `linearProgressiveBlur()`, `radialProgressiveBlur()`, `regionBlur()`, `zoomBlur()`.
+- Lighting: `dropShadow()`, `glow()`, `lightLeak()`, `shine()`, `starburst()`, `vignette()`.
+- Distortion and transforms: `barrelDistortion()`, `chromaticAberration()`, `cornerPin()`, `fisheye()`, `mirror()`, `noiseDisplacement()`, `scale()`, `skew()`, `tile()`, `uvTranslate()`, `wave()`, `xyTranslate()`.
+- Textures and patterns: `burlap()`, `checkerboard()`, `contourLines()`, `dotGrid()`, `emboss()`, `flannel()`, `gridlines()`, `halftone()`, `halftoneLinearGradient()`, `lines()`, `liquidContours()`, `noise()`, `paper()`, `pattern()`, `rings()`, `scanlines()`, `speckle()`, `tvSignalOff()`, `waves()`, `whiteNoise()`, `zigzag()`.
+- Edges: `outline()`, `roughenEdges()`, `shrinkwrap()`, `tear()`.
+- Pixelation and transitions: `evolve()`, `linearProgressivePixelate()`, `pixelate()`, `pixelDissolve()`, `radialProgressivePixelate()`, `venetianBlinds()`.
+
+## Color correction
+
+Read [color-correction.md](color-correction.md) for how to apply color correction, either using the `colorCorrection()` effect or `lut()` to apply a 3D `.cube` color grade.
+
+## 3D content
+
+See [./3d.md](./3d.md) for 3D content in Remotion using Three.js and React Three Fiber.
+
+## Sound effects
+
+When needing to use sound effects, load the [./sfx.md](./sfx.md) file for more information.
+
+## Audio visualization
+
+When needing to visualize audio (spectrum bars, waveforms, bass-reactive effects), load the [./audio-visualization.md](./audio-visualization.md) file for more information.
+
+## Maps
+
+For static maps, animated routes and markers, geographic explainers, Mapbox, MapLibre, MapTiler, GeoJSON, or 3D geographic flyovers, load [Remotion Maps](./remotion-maps/REFERENCE.md).
+
+## Captions
+
+When dealing with captions or subtitles, load the Remotion Captions skill for more information.
+
+## Google Fonts
+
+Is the recommended way to load fonts in Remotion. See [google-fonts.md](google-fonts.md) for how to load Google Fonts.
+
+## Local fonts
+
+See [local-fonts.md](local-fonts.md) for how to load local fonts.
+
+## GIFs
+
+See [gifs.md](gifs.md) for how to display GIFs synchronized with Remotion's timeline.
+
+## Advanced Images
+
+See [images.md](images.md) for sizing and positioning images, dynamic image paths, and getting image dimensions.
+
+## Lottie animations
+
+See [lottie.md](lottie.md) for embedding Lottie animations in Remotion.
+
+## Timing
+
+See [timing.md](timing.md) for more timing techniques for `interpolate()`.
+
+## Parameterized videos
+
+See [parameters.md](parameters.md) for making a composition parametrizable by adding a Zod schema.
+
+## Measuring DOM nodes
+
+See [measuring-dom-nodes.md](measuring-dom-nodes.md) for measuring DOM element dimensions in Remotion.
+
+## Measuring text
+
+See [measuring-text.md](measuring-text.md) for measuring text dimensions, fitting text to containers, and checking overflow.
+
+## Using FFmpeg
+
+For some video operations, such as trimming videos or detecting silence, FFmpeg should be used. Load the [./ffmpeg.md](./ffmpeg.md) file for more information.
+
+## Silence detection
+
+When needing to detect and trim silent segments from video or audio files, load the [./silence-detection.md](./silence-detection.md) file.
+
+## Dynamic duration, dimensions and data
+
+See [calculate-metadata.md](calculate-metadata.md) for dynamically set composition duration, dimensions, and props.
+
+## Compositions and stills
+
+Before registering `&lt;Composition&gt;` or `&lt;Still&gt;` elements, read [compositions.md](compositions.md) for source-editable registrations, folders, default props and nesting. For Studio navigation into a scene's own timeline, use [connected compositions](connected-compositions.md).
+
+## Advanced sequencing
+
+See [sequencing.md](sequencing.md) for more sequencing patterns - delay, trim, limit duration of items.
+
+## Install modules
+
+Use `npx remotion add` to add new packages with the right version:
+
+</code></pre>
+<p>npx remotion add @remotion/media
+```</p>
+<p>This goes for <code>@remotion/*</code> packages, <code>mediabunny</code>, <code>@mediabunny/*</code>, <code>zod</code>, and <code>@huggingface/transformers</code>.</p>
+<h2>Visual checks</h2>
+<p>When a visual check is useful, open the Remotion Studio for an interactive preview.</p>
+<p>You can also use Rendering to inspect one or several frames as images.</p>
+  </article>
+</main>
+<footer class="footer">
+  <p>本页内容来自 <a href="https://github.com/remotion-dev/skills" target="_blank" rel="noopener">remotion-dev/skills</a>，遵循上游仓库许可。页面由 GitHub Actions 自动部署。</p>
+</footer>
+</body>
+</html>

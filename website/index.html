@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Remotion Agent Skills · 官方 AI 技能目录</title>
+<meta name="description" content="Remotion 官方 12 个 Agent Skills 的中文展示站：让 Claude Code / Codex / Cursor 等 AI 编码助手会用 Remotion 做视频。" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<header class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">REMOTION · OFFICIAL AGENT SKILLS</div>
+    <h1>Remotion Agent Skills</h1>
+    <p class="hero-sub">12 个官方技能，教会你的 AI 编码助手用 <strong>Remotion</strong> 做视频<br/>适用于 Claude Code · Codex · Kimi Code · Cursor</p>
+    <div class="install">
+      <code id="cmd">npx skills add remotion-dev/skills</code>
+      <button class="copy-btn" onclick="copyCmd(this)">复制命令</button>
+    </div>
+    <div class="stats">
+      <span><strong>12</strong> 个技能</span>
+      <span class="dot">·</span>
+      <span>版本 <strong>v4.0.536</strong></span>
+      <span class="dot">·</span>
+      <span>上游 <a href="https://github.com/remotion-dev/skills" target="_blank" rel="noopener">remotion-dev/skills</a> ★5.3k</span>
+    </div>
+  </div>
+</header>
+
+<main class="catalog">
+  <div class="toolbar">
+    <input id="search" type="search" placeholder="搜索技能（中英文均可）…" oninput="filterCards(this.value)" autocomplete="off" />
+    <span id="count">12 个技能</span>
+  </div>
+  <div class="grid" id="grid">
+      <a class="card" href="skills/remotion-best-practices.html" data-search="remotion-best-practices router for all remotion skills 全部技能的路由入口——拿不准用哪个就选它">
+        <div class="card-top">
+          <span class="chip mono">/remotion-best-practices</span>
+          <span class="ver">v4.0.536</span>
+        </div>
+        <p class="card-cn">全部技能的路由入口——拿不准用哪个就选它</p>
+        <p class="card-en">Router for all Remotion skills</p>
+        <span class="card-link">查看完整技能文档 →</span>
+      </a>
+      <a class="card" href="skills/remotion-captions.html" data-search="remotion-captions transcribing, displaying and animating captions 字幕转录、展示与动画">
+        <div class="card-top">
+          <span class="chip mono">/remotion-captions</span>
+          <span class="ver">v4.0.536</span>
+        </div>
+        <p class="card-cn">字幕转录、展示与动画</p>
+        <p class="card-en">Transcribing, displaying and animating captions</p>
+        <span class="card-link">查看完整技能文档 →</span>
+      </a>
+      <a class="card" href="skills/remotion-create.html" data-search="remotion-create create a new remotion video 新建 remotion 视频项目或组合">
+        <div class="card-top">
+          <span class="chip mono">/remotion-create</span>
+          <span class="ver">v4.0.536</span>
+        </div>
+        <p class="card-cn">新建 Remotion 视频项目或组合</p>
+        <p class="card-en">Create a new Remotion video</p>
+        <span class="card-link">查看完整技能文档 →</span>
+      </a>
+      <a class="card" href="skills/remotion-docs.html" data-search="remotion-docs search remotion documentation 搜索 remotion 官方文档">
+        <div class="card-top">
+          <span class="chip mono">/remotion-docs</span>
+          <span class="ver">v4.0.536</span>
+        </div>
+        <p class="card-cn">搜索 Remotion 官方文档</p>
+        <p class="card-en">Search Remotion documentation</p>
+        <span class="card-link">查看完整技能文档 →</span>
+      </a>
+      <a class="card" href="skills/remotion-interactivity.html" data-search="remotion-interactivity structure remotion markup for interactivity 面向交互性的标记结构最佳实践">
+        <div class="card-top">
+          <span class="chip mono">/remotion-interactivity</span>
+          <span class="ver">v4.0.536</span>
+        </div>
+        <p class="card-cn">面向交互性的标记结构最佳实践</p>
+        <p class="card-en">Structure Remotion markup for interactivity</p>
+        <span class="card-link">查看完整技能文档 →</span>
+      </a>
+      <a class="card" href="skills/remotion-maps.html" data-search="remotion-maps remotion map animation knowledge 地图动画知识">
+        <div class="card-top">
+          <span class="chip mono">/remotion-maps</span>
+          <span class="ver">v4.0.536</span>
+        </div>
+        <p class="card-cn">地图动画知识</p>
+        <p class="card-en">Remotion Map animation knowledge</p>
+        <span class="card-link">查看完整技能文档 →</span>
+      </a>
+      <a class="card" href="skills/remotion-markup.html" data-search="remotion-markup content, animation and effects best practices 内容、动画与特效最佳实践">
+        <div class="card-top">
+          <span class="chip mono">/remotion-markup</span>
+          <span class="ver">v4.0.536</span>
+        </div>
+        <p class="card-cn">内容、动画与特效最佳实践</p>
+        <p class="card-en">Content, animation and effects best practices</p>
+        <span class="card-link">查看完整技能文档 →</span>
+      </a>
+      <a class="card" href="skills/remotion-multimedia.html" data-search="remotion-multimedia interacting with mediabunny 与 mediabunny 交互的多媒体处理">
+        <div class="card-top">
+          <span class="chip mono">/remotion-multimedia</span>
+          <span class="ver">v4.0.536</span>
+        </div>
+        <p class="card-cn">与 Mediabunny 交互的多媒体处理</p>
+        <p class="card-en">Interacting with Mediabunny</p>
+        <span class="card-link">查看完整技能文档 →</span>
+      </a>
+      <a class="card" href="skills/remotion-render.html" data-search="remotion-render export a remotion video 导出 remotion 视频（mp4 等）">
+        <div class="card-top">
+          <span class="chip mono">/remotion-render</span>
+          <span class="ver">v4.0.536</span>
+        </div>
+        <p class="card-cn">导出 Remotion 视频（MP4 等）</p>
+        <p class="card-en">Export a Remotion video</p>
+        <span class="card-link">查看完整技能文档 →</span>
+      </a>
+      <a class="card" href="skills/remotion-saas.html" data-search="remotion-saas build an app with remotion 用 remotion 构建应用 / saas">
+        <div class="card-top">
+          <span class="chip mono">/remotion-saas</span>
+          <span class="ver">v4.0.536</span>
+        </div>
+        <p class="card-cn">用 Remotion 构建应用 / SaaS</p>
+        <p class="card-en">Build an app with Remotion</p>
+        <span class="card-link">查看完整技能文档 →</span>
+      </a>
+      <a class="card" href="skills/remotion-studio.html" data-search="remotion-studio preview a remotion video 预览 remotion 视频（studio）">
+        <div class="card-top">
+          <span class="chip mono">/remotion-studio</span>
+          <span class="ver">v4.0.536</span>
+        </div>
+        <p class="card-cn">预览 Remotion 视频（Studio）</p>
+        <p class="card-en">Preview a Remotion video</p>
+        <span class="card-link">查看完整技能文档 →</span>
+      </a>
+      <a class="card" href="skills/remotion-upgrade.html" data-search="remotion-upgrade upgrade remotion, and related packages 升级 remotion 及相关依赖">
+        <div class="card-top">
+          <span class="chip mono">/remotion-upgrade</span>
+          <span class="ver">v4.0.536</span>
+        </div>
+        <p class="card-cn">升级 Remotion 及相关依赖</p>
+        <p class="card-en">Upgrade Remotion, and related packages</p>
+        <span class="card-link">查看完整技能文档 →</span>
+      </a>
+  </div>
+  <p class="empty" id="empty" style="display:none">没有匹配的技能，换个关键词试试。</p>
+</main>
+
+<section class="usage">
+  <h2>如何使用</h2>
+  <div class="usage-grid">
+    <div class="usage-item">
+      <h3>① 安装到项目</h3>
+      <p>在任意项目里执行 <code class="inline">npx skills add remotion-dev/skills</code>，把 12 个技能装到你的 AI 编码助手可用目录。</p>
+    </div>
+    <div class="usage-item">
+      <h3>② 按需调用</h3>
+      <p>对 AI 说「用 /remotion-create 做一个新品发布视频」，助手就会加载对应技能的最佳实践来干活。</p>
+    </div>
+    <div class="usage-item">
+      <h3>③ 综合入口</h3>
+      <p>不确定选哪个时，用 <code class="inline">/remotion-best-practices</code>——它是所有技能的路由与汇总。</p>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <p>内容来自 <a href="https://github.com/remotion-dev/skills" target="_blank" rel="noopener">remotion-dev/skills</a>（遵循上游许可）· 本展示站由 GitHub Actions 自动部署到 GitHub Pages</p>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

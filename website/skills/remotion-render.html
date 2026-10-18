@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>remotion-render · Remotion Agent Skills</title>
+<link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+<header class="topbar">
+  <a class="back" href="../index.html">← 返回技能目录</a>
+  <span class="crumb">Remotion Agent Skills</span>
+</header>
+<main class="detail">
+  <div class="detail-head">
+    <div class="chip mono">/remotion-render</div>
+    <h1>remotion-render</h1>
+    <p class="desc-cn">导出 Remotion 视频（MP4 等）</p>
+    <p class="desc-en">Export a Remotion video</p>
+    <div class="meta-row">
+      <span class="badge">v4.0.536</span>
+      <span class="badge badge-src">来源：remotion-dev/skills</span>
+    </div>
+  </div>
+  <article class="md">
+<h2>General rendering strategy</h2>
+<p>Render a video using:</p>
+<pre><code>npx remotion render
+</code></pre>
+<p>Full list of options: https://www.remotion.dev/docs/cli/render.md</p>
+<p>Render a still using:</p>
+<pre><code>npx remotion still
+</code></pre>
+<p>Full list of options: https://www.remotion.dev/docs/cli/still.md</p>
+<p>To render several frames as images in one call, use <code>render --frames</code>:</p>
+<pre><code>npx remotion render [composition-id] out/frames --frames=0,30,90 --image-format=png
+</code></pre>
+<p>See https://www.remotion.dev/docs/cli/render.md#--frames for more options.</p>
+<h2>Transparent videos</h2>
+<p>See <a href="./transparent-videos.md">Transparent videos</a> for rendering out a video with transparency.</p>
+  </article>
+</main>
+<footer class="footer">
+  <p>本页内容来自 <a href="https://github.com/remotion-dev/skills" target="_blank" rel="noopener">remotion-dev/skills</a>，遵循上游仓库许可。页面由 GitHub Actions 自动部署。</p>
+</footer>
+</body>
+</html>

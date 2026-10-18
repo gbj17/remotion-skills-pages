@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>remotion-captions · Remotion Agent Skills</title>
+<link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+<header class="topbar">
+  <a class="back" href="../index.html">← 返回技能目录</a>
+  <span class="crumb">Remotion Agent Skills</span>
+</header>
+<main class="detail">
+  <div class="detail-head">
+    <div class="chip mono">/remotion-captions</div>
+    <h1>remotion-captions</h1>
+    <p class="desc-cn">字幕转录、展示与动画</p>
+    <p class="desc-en">Transcribing, displaying and animating captions</p>
+    <div class="meta-row">
+      <span class="badge">v4.0.536</span>
+      <span class="badge badge-src">来源：remotion-dev/skills</span>
+    </div>
+  </div>
+  <article class="md">
+<p>All captions must be processed in JSON. The captions must use the <a href="https://www.remotion.dev/docs/captions/caption.md"><code>Caption</code></a> type which is the following:</p>
+<pre><code class="language-ts">import type { Caption } from &quot;@remotion/captions&quot;;
+</code></pre>
+<p>This is the definition:</p>
+<pre><code class="language-ts">type Caption = {
+  text: string;
+  startMs: number;
+  endMs: number;
+  timestampMs: number | null;
+  confidence: number | null;
+  pageBreakAfter?: boolean;
+};
+</code></pre>
+<h2>Generating captions</h2>
+<p>To transcribe video and audio files to generate captions, load the <a href="transcribe-captions.md">transcribe-captions.md</a> file for more instructions.</p>
+<h2>Displaying captions</h2>
+<p>To display captions in your video, load the <a href="display-captions.md">display-captions.md</a> file for more instructions.</p>
+<h2>Importing captions</h2>
+<p>To import captions from a .srt file, load the <a href="import-srt-captions.md">import-srt-captions.md</a> file for more instructions.</p>
+<h2>Post-creation</h2>
+<p>After you're done, load this skill: Remotion Best Practices</p>
+<p>If not alreay done, open the Remotion Studio, unless instructed otherwise.</p>
+  </article>
+</main>
+<footer class="footer">
+  <p>本页内容来自 <a href="https://github.com/remotion-dev/skills" target="_blank" rel="noopener">remotion-dev/skills</a>，遵循上游仓库许可。页面由 GitHub Actions 自动部署。</p>
+</footer>
+</body>
+</html>

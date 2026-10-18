@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>remotion-maps · Remotion Agent Skills</title>
+<link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+<header class="topbar">
+  <a class="back" href="../index.html">← 返回技能目录</a>
+  <span class="crumb">Remotion Agent Skills</span>
+</header>
+<main class="detail">
+  <div class="detail-head">
+    <div class="chip mono">/remotion-maps</div>
+    <h1>remotion-maps</h1>
+    <p class="desc-cn">地图动画知识</p>
+    <p class="desc-en">Remotion Map animation knowledge</p>
+    <div class="meta-row">
+      <span class="badge">v4.0.536</span>
+      <span class="badge badge-src">来源：remotion-dev/skills</span>
+    </div>
+  </div>
+  <article class="md">
+<h1>Remotion Maps</h1>
+<p>Choose exactly one technique from the intended shot, then load only that technique's <code>TECHNIQUE.md</code>.
+Every technique directory is self-contained and may be removed without breaking the others.</p>
+<h2><a href="techniques/static-map/TECHNIQUE.md">Static map</a></h2>
+<ul>
+<li>Requires you grab a satellite image and mount it in a <code>&lt;Img&gt;</code> tag, and animate on top</li>
+</ul>
+<h2><a href="techniques/mapbox/TECHNIQUE.md">Mapbox</a></h2>
+<ul>
+<li>Requires a Mapbox key</li>
+<li>Nicer styles by default</li>
+<li>Map can display a round globe when zoomed out</li>
+<li>Includes nice 3D buildings such as the Eiffel tower</li>
+</ul>
+<h2><a href="techniques/maplibre/TECHNIQUE.md">MapLibre</a></h2>
+<ul>
+<li>Requires no API key, fully free</li>
+<li>Does not include 3D building</li>
+</ul>
+<h2><a href="techniques/maptiler/TECHNIQUE.md">MapTiler</a></h2>
+<ul>
+<li>Uses MapTiler</li>
+<li>Annotations can be drawn on top of geographic features: borders, rivers, labels</li>
+</ul>
+<h2><a href="techniques/cesium/TECHNIQUE.md">CesiumJS</a></h2>
+<ul>
+<li>Flythroughs through terrain and mountains</li>
+<li>"Flight simulator" perspective</li>
+</ul>
+  </article>
+</main>
+<footer class="footer">
+  <p>本页内容来自 <a href="https://github.com/remotion-dev/skills" target="_blank" rel="noopener">remotion-dev/skills</a>，遵循上游仓库许可。页面由 GitHub Actions 自动部署。</p>
+</footer>
+</body>
+</html>

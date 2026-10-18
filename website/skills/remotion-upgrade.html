@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>remotion-upgrade · Remotion Agent Skills</title>
+<link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+<header class="topbar">
+  <a class="back" href="../index.html">← 返回技能目录</a>
+  <span class="crumb">Remotion Agent Skills</span>
+</header>
+<main class="detail">
+  <div class="detail-head">
+    <div class="chip mono">/remotion-upgrade</div>
+    <h1>remotion-upgrade</h1>
+    <p class="desc-cn">升级 Remotion 及相关依赖</p>
+    <p class="desc-en">Upgrade Remotion, and related packages</p>
+    <div class="meta-row">
+      <span class="badge">v4.0.536</span>
+      <span class="badge badge-src">来源：remotion-dev/skills</span>
+    </div>
+  </div>
+  <article class="md">
+<h1>Upgrade Remotion</h1>
+<ol>
+<li>Inspect the project manifests and lockfile to identify the package manager and workspaces. Preserve unrelated changes.</li>
+<li>Determine whether <code>@remotion/cli</code> is locally available. If it is, run:</li>
+</ol>
+<p><code>bash
+   npx remotion upgrade</code></p>
+<p>This also updates project-local Remotion skills. Skip the manual upgrade below.</p>
+<ol start="3">
+<li>If <code>@remotion/cli</code> is not available, upgrade manually:
+   - Get the latest stable Remotion version with <code>npm view remotion version</code>.
+   - Find every installed <code>remotion</code> and <code>@remotion/*</code> dependency across the project and upgrade them all to that exact version. Preserve their dependency sections and the project's workspace or catalog conventions.
+   - Read the <code>@remotion/studio</code> dependencies for the target Remotion version using <code>npm view @remotion/studio@&lt;version&gt; dependencies --json</code>. Align installed auxiliary packages such as <code>zod</code>, <code>mediabunny</code>, and <code>@huggingface/transformers</code> with the versions listed there. Use the <code>mediabunny</code> version for installed <code>@mediabunny/*</code> packages.
+   - Run the project's package manager to update its lockfile.</li>
+<li>If <code>@remotion/cli</code> is not available, update the installed Remotion skills:</li>
+</ol>
+<p><code>bash
+   npx skills update remotion-best-practices remotion-captions remotion-create remotion-docs remotion-interactivity remotion-maps remotion-markup remotion-multimedia remotion-render remotion-saas remotion-studio remotion-upgrade --yes</code></p>
+<ol start="5">
+<li>Review the manifest and lockfile diff. Ensure all Remotion packages use one version and installed auxiliary packages use their recommended versions. If the CLI is available, run <code>npx remotion versions</code> as an additional check.</li>
+</ol>
+<p>The <a href="https://github.com/remotion-dev/remotion/releases">Remotion releases</a> contain the changelog and may be useful for summarizing relevant changes after the upgrade.</p>
+  </article>
+</main>
+<footer class="footer">
+  <p>本页内容来自 <a href="https://github.com/remotion-dev/skills" target="_blank" rel="noopener">remotion-dev/skills</a>，遵循上游仓库许可。页面由 GitHub Actions 自动部署。</p>
+</footer>
+</body>
+</html>
